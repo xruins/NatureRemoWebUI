@@ -1,0 +1,9 @@
+nature-remo-api-server
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+go.work
+vendor/

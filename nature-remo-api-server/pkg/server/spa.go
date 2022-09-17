@@ -8,9 +8,6 @@ import (
 	"path/filepath"
 )
 
-//go:embed config.ts
-var configFile []byte
-
 //go:embed build/*
 var staticFiles embed.FS
 

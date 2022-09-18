@@ -1,6 +1,9 @@
 # build nature-remo-web-ui 
 FROM node:carbon as webui-builder
 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
 WORKDIR /usr/src/nature-remo-web-ui
 
 COPY ./nature-remo-web-ui/package*.json .
@@ -15,10 +18,17 @@ WORKDIR /app
 
 COPY ./nature-remo-api-server/ ./
 COPY --from=webui-builder /usr/src/nature-remo-web-ui/build ./pkg/server/build
-RUN --mount=type=cache,target=/go/pkg/mod CGO_ENABLED=0 go build -ldflags="-w -s" -o /app/nature-remo-api-server
+
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    GOOS=$(echo ${TARGETPLATFORM} | cut -d'/' -f1) \
+    GOARCH=$(echo ${TARGETPLATFORM} | cut -d'/' -f2) \
+    GOARM=$(echo ${TARGETPLATFORM} | cut -d'/' -f3 | cut -c2) \
+    CGO_ENABLED=0 \
+    go build -ldflags="-w -s" -o /app/nature-remo-api-server
 
 # build runtime image
-FROM gcr.io/distroless/static-debian11:debug-nonroot
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian11:debug-nonroot
 
 COPY --from=server-builder --chmod=777 /app/nature-remo-api-server /usr/local/bin/nature-remo-api-server
 

@@ -1,6 +1,7 @@
 # build nature-remo-web-ui 
 FROM node:carbon as webui-builder
 
+ARG VERSION=2
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
@@ -29,6 +30,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 
 # build runtime image
 FROM --platform=$TARGETPLATFORM gcr.io/distroless/static-debian11:debug-nonroot
+LABEL org.opencontainers.image.source = "https://github.com/xruins/NatureRemoWebUI"
 
 COPY --from=server-builder --chmod=777 /app/nature-remo-api-server /usr/local/bin/nature-remo-api-server
 

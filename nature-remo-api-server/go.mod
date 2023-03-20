@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-openapi/errors v0.20.3
 	github.com/go-openapi/runtime v0.24.1
-	github.com/go-openapi/strfmt v0.21.3
+	github.com/go-openapi/strfmt v0.21.5
 	github.com/go-openapi/swag v0.22.3
 	github.com/go-openapi/validate v0.22.0
 	github.com/gorilla/handlers v1.5.1
